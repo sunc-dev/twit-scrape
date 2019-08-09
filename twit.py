@@ -1,5 +1,12 @@
 import twint
+import os
 #Enter Twitter Handler
+
+
+def set_path():
+    path = r"C:\Users\csunj\OneDrive\Documents\Github\Repository\twit-scrape"
+    dl = os.path.join(path, 'data')
+    return dl
 
 
 def user_input():
@@ -12,9 +19,24 @@ def user_input():
 def handlers(handler):
     handlers = []
     handlers.append(handler)
-    return handler
+    return handlers
 
 
-c = twint.Config()
-c.Username = user_input()
-print(handlers(c.Username))
+def get_tweets(handler, dl):
+    c = twint.Config()
+    c.Username = handler
+    c.Custom = [
+        'id', 'date', 'time', 'timezone', 'user_id', 'username', 'tweet',
+        'replies', 'retweets', 'likes', 'hashtags', 'link', 'retweet',
+        'user_rt', 'mentions'
+    ]
+
+    c.Store_csv = True
+    c.Output = handler + ".csv"
+
+
+handler, start, end = user_input()
+path = set_path()
+
+print(handlers(handler))
+print(path)
