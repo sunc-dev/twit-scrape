@@ -33,10 +33,9 @@ def get_tweets(handler, dl):
 
     c.Store_csv = True
     c.Output = handler + ".csv"
+    twint.run.Profile(c)
 
 
 handler, start, end = user_input()
-path = set_path()
-
-print(handlers(handler))
-print(path)
+dl = set_path()
+get_tweets(handler, dl)
