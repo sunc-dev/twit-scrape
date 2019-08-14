@@ -21,8 +21,6 @@ def user_input():
     end = input("Enter a date for Tweets until: ")
     return handler, start, end
 
-
-
 def set_paths():
     directory = r"C:\Users\csunj\OneDrive\Documents\Github\Repository\twit-scrape"
     fileName = 'account_list.csv'
@@ -37,41 +35,51 @@ def load_users(acctPath):
         reader = csv.reader(f)
         l = list(reader)
         accounts = [val for sublist in l for val in sublist]
-
     return accounts
 
-
-
-"""def handlers(handler):
-    handlers = []
-    handlers.append(handler)
-    return handlers
-
-def get_tweets(handler, fPath):
+def get_tweets(path, i):
     c = twint.Config()
-    c.Username = handler
+    c.Username = i
     c.Store_json = True
     c.Retweets = True
     c.Limit = 1
     c.Hide_output=True
-    c.Output = fPath
-    
+    c.Output = path
     twint.run.Search(c)
 
-def load_tweets(fPath):
+def search_tweets():
+      for i in accounts:
+          get_tweets(path, i)
+    
+def load_tweets(path):
     tweets=[]
-    for line in open(fPath, 'r',encoding='utf8'):
+    for line in open(os.path.join(path,'tweets.json'), 'r',encoding='utf8'):
         tweets.append(json.loads(line))
     return tweets
 
 def parse_tweets(tweets):
     data=pd.DataFrame(tweets)
     return data
-"""
+             
+def clean_data(data):
+    cols = ['mentions'
+            ,'urls'
+            ,'photos'
+            ,'cashtags'
+            ,'hashtags']
+    data[cols] = data[cols].astype(str).replace(
+        r"\[|\]|\['|\']|'", 
+        '', 
+        regex=True)
+    return data
 
-#handler, start, end = user_input()
+
 directory, acctPath, path, fileName = set_paths()
 accounts = load_users(acctPath)
-#get_tweets(handler, fPath)
-#tweets = load_tweets(fPath)
-#data = parse_tweets(tweets)
+search_tweets()
+tweets = load_tweets(path)
+data = parse_tweets(tweets)
+data = clean_data(data)
+
+
+
