@@ -12,8 +12,6 @@ import json
 import csv
 import nest_asyncio
 nest_asyncio.apply()
-#Enter Twitter Handler
-
 
 def user_input():
     handler = input("Enter a twitter handler: ")
@@ -44,7 +42,7 @@ def get_tweets(path, start,end, i):
     c.Store_json = True
     c.Retweets = True
     c.Hide_output = True
-    c.Output = path
+    c.Output = os.path.join(path, i +'.json')
     twint.run.Search(c)
 
 def search_tweets():
@@ -53,8 +51,10 @@ def search_tweets():
 
 def load_tweets(path):
     tweets = []
-    for line in open(os.path.join(path, 'tweets.json'), 'r', encoding='utf8'):
-        tweets.append(json.loads(line))
+    for i in accounts:
+        for line in open(os.path.join(path, i+'.json'), 'r', encoding='utf8'):
+            tweets.append(json.loads(line))
+            
     return tweets
 
 def parse_tweets(tweets):

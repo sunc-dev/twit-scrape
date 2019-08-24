@@ -11,6 +11,8 @@ import os
 import json
 import csv
 import nest_asyncio
+from os import listdir
+
 nest_asyncio.apply()
 #Enter Twitter Handler
 
@@ -44,17 +46,23 @@ def get_tweets(path, start,end, i):
     c.Store_json = True
     c.Retweets = True
     c.Hide_output = True
-    c.Output = path
+    c.Output = os.path.join(path, i +'.json')
     twint.run.Search(c)
 
 def search_tweets():
     for i in accounts:
         get_tweets(path, start, end ,i)
+        
+def get_files(path, suffix=".json" ):
+    files = listdir(path)
+    return [ files for files in files if files.endswith( suffix ) ]
+        
 
 def load_tweets(path):
     tweets = []
-    for line in open(os.path.join(path, 'tweets.json'), 'r', encoding='utf8'):
-        tweets.append(json.loads(line))
+    for i in files:
+        for line in open(os.path.join(path, 'tweets.json'), 'r', encoding='utf8'):
+            tweets.append(json.loads(line))
     return tweets
 
 def parse_tweets(tweets):
@@ -72,6 +80,13 @@ handler, start, end = user_input()
 directory, acctPath, path, fileName = set_paths()
 accounts = load_users(acctPath)
 search_tweets()
+files = get_files(path)
 tweets = load_tweets(path)
 data = parse_tweets(tweets)
 data = clean_data(data)
+
+
+
+
+
+
