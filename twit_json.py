@@ -12,16 +12,15 @@ import json
 import csv
 import nest_asyncio
 from os import listdir
-
+import openpyxl
 nest_asyncio.apply()
 #Enter Twitter Handler
 
 
 def user_input():
-    handler = input("Enter a twitter handler: ")
     start = input("Enter a date for Tweets since: ")
     end = input("Enter a date for Tweets until: ")
-    return handler, start, end
+    return start, end
 
 def set_paths():
     directory = r"C:\Users\csunj\OneDrive\Documents\Github\Repository\twit-scrape"
@@ -31,7 +30,7 @@ def set_paths():
     return directory, acctPath, path, fileName
 
 def load_users(acctPath):
-    accounts = pd.read_csv(acctPath)
+    accounts = pd.read_csv(acctPath, encoding='utf8')
     with open(acctPath, 'r') as f:
         reader = csv.reader(f)
         l = list(reader)
@@ -61,7 +60,7 @@ def get_files(path, suffix=".json" ):
 def load_tweets(path):
     tweets = []
     for i in files:
-        for line in open(os.path.join(path, 'tweets.json'), 'r', encoding='utf8'):
+        for line in open(os.path.join(path, i), 'r', encoding='utf8'):
             tweets.append(json.loads(line))
     return tweets
 
@@ -70,13 +69,16 @@ def parse_tweets(tweets):
     return data
 
 def clean_data(data):
-    cols = ['mentions', 'urls', 'photos', 'cashtags', 'hashtags']
+    cols = ['mentions', 'urls', 'photos', 'cashtags', 'hashtags', 'reply_to']
     data[cols] = data[cols].astype(str).replace(r"\[|\]|\['|\']|'",
                                                 '',
     regex=True)
     return data
 
-handler, start, end = user_input()
+def to_Excel(data):
+    data.to_excel(os.path.join(path,'tweets_2015.xlsx'), sheet_name="raw",index=False)
+
+start, end = user_input()
 directory, acctPath, path, fileName = set_paths()
 accounts = load_users(acctPath)
 search_tweets()
@@ -84,7 +86,7 @@ files = get_files(path)
 tweets = load_tweets(path)
 data = parse_tweets(tweets)
 data = clean_data(data)
-
+to_Excel(data)
 
 
 
