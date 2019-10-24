@@ -39,8 +39,8 @@ def load_users(acctPath):
 
 def get_tweets(path, start,end, i):
     c = twint.Config()
-    c.Since = start
-    c.Until = end
+    c.Since = '2019-01-01'
+    c.Until = '2019-10-31'
     c.Username = i
     c.Store_json = True
     c.Retweets = True
