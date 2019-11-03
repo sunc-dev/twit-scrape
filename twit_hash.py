@@ -17,7 +17,7 @@ nest_asyncio.apply()
 
 #define tags
 
-tags = ['#canadadebates2019']
+tags = ['#votenation']
 
 #set paths
 
@@ -30,8 +30,8 @@ def set_paths():
 
 def get_tweets(path, i):
     c = twint.Config()
-    c.Since = '2018-12-31'
-    c.Until = '2019-10-31'
+    c.Since = '2014-12-31'
+    c.Until = '2016-01-01'
     c.Search = i
     c.Store_json = True
     c.Retweets = True
